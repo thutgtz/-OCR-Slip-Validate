@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: npm start
+    command: node .\index.js
     volumes :
       - .:/app
     ports:
