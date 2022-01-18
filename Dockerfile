@@ -18,7 +18,6 @@ RUN apt-get update && apt-get install -y python3.6 python3-distutils python3-pip
 RUN apt-get install -y build-essential libzbar-dev
 
 RUN apt-get update && apt-get install -y \
-    keyboard-configuration \
     git \
     bzip2 \
     libx11-6 \
