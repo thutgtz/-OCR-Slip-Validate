@@ -8,6 +8,6 @@ services:
       dockerfile: Dockerfile
     command: npm start
     volumes :
-      - ./:/app
+      - .:/app
     ports:
       - "5000:5000"
