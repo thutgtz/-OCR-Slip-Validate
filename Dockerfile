@@ -28,11 +28,11 @@ RUN apt-get install -y bzip2 \
     cmake \
     unzip \
     pkg-config \
-    python-opencv \
-    libopencv-dev \ 
+    python3-opencv \
+    libopencv-dev \
     libjpeg-dev \
     libpng-dev \
-    libtiff-dev \ 
+    libtiff-dev \
     libgtk2.0-dev \
     python-numpy \
     python-pycurl \
@@ -50,36 +50,9 @@ RUN pip3 install --no-cache-dir easyocr
 RUN pip3 install --no-cache-dir pyzbar
 RUN pip3 install --no-cache-dir simplejson 
 RUN pip3 install --no-cache-dir numpy
-
-# RUN apt-get install -y git
-# RUN git clone https://github.com/opencv/opencv_contrib  && \
-#     cd opencv_contrib  && \
-#     git fetch --all --tags  && \
-#     git checkout tags/4.3.0  && \
-#     cd .. && \
-#     git clone https://github.com/opencv/opencv.git  && \
-#     cd opencv  && \
-#     git checkout tags/4.3.0   
-
-# RUN pwd &&\
-#    cd opencv  && \
-#    pwd &&\
-#    mkdir build && cd build && \
-#    pwd &&\
-#    cmake -DCMAKE_BUILD_TYPE=Release  \
-#      -DENABLE_CXX14=ON                 \
-#      -DBUILD_PERF_TESTS=OFF            \
-#      -DOPENCV_GENERATE_PKGCONFIG=ON    \
-#      -DWITH_XINE=ON                    \
-#      -DBUILD_TESTS=OFF                 \
-#      -DENABLE_PRECOMPILED_HEADERS=OFF  \
-#      -DCMAKE_SKIP_RPATH=ON             \
-#      -DBUILD_WITH_DEBUG_INFO=OFF       \
-#      -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules  \
-#      -Dopencv_dnn_superres=ON /usr/bin/ .. && \
-#    make -j$(nproc) && \
-#    make install 
 RUN pip3 install --no-cache-dir zbar-py
+RUN pip uninstall opencv-python-headless==4.5.5.62 
+RUN pip install opencv-python-headless==4.1.2.30
 ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 RUN apt-get install -y language-pack-en
 ENV LANG="en_US.UTF-8"
