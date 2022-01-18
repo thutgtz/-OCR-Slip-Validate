@@ -8,6 +8,7 @@ exports.slipValidate = (obj) => new Promise(async (resolve, reject) => {
     )
     script.send(JSON.stringify(obj));
     script.on('message', (message) => {
+        console.log(message)
         if (message.slice(0, 4) == 'JSON') resolve(message);
     })
     script.end((err) => reject(err || ''));
