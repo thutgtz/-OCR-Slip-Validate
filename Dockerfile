@@ -81,6 +81,6 @@ RUN pip3 install --no-cache-dir numpy
 #    make -j$(nproc) && \
 #    make install 
 RUN pip3 install --no-cache-dir zbar-py
-COPY ./package.json /app
 WORKDIR /app
+COPY ./package.json /app
 RUN npm install
