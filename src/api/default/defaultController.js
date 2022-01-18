@@ -11,6 +11,7 @@ class defaultController {
                 img64,
                 data
             })
+
             successed(res, result)
         } catch (err) {
             failed(res, err)

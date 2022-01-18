@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  api:
+    container_name: slip-validate
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm start
+    volumes :
+      - ./:/app
+    ports:
+      - "5000:5000"
