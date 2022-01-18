@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: npm start
+    command: tail -F anything
     volumes :
       - .:/app
     ports:
