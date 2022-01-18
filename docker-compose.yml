@@ -6,8 +6,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: node .\index.js
+    
     volumes :
-      - ${PWD}:/app
+      - .:/app
     ports:
       - "5000:5000"
