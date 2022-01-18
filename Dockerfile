@@ -14,7 +14,6 @@ RUN . "$NVM_DIR/nvm.sh" &&  nvm use v${NODE_VERSION}
 RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
 RUN cp /root/.nvm/versions/node/v${NODE_VERSION}/bin/node /usr/bin/
 RUN cp /root/.nvm/versions/node/v${NODE_VERSION}/bin/npm /usr/bin/
-RUN /root/.nvm/versions/node/v${NODE_VERSION}/bin/npm install  leasot@latest
 RUN apt-get update && \
     apt-get install -y software-properties-common gcc && \
     add-apt-repository -y ppa:deadsnakes/ppa
@@ -83,4 +82,4 @@ RUN pip3 install --no-cache-dir numpy
 RUN pip3 install --no-cache-dir zbar-py
 WORKDIR /app
 COPY ./package.json /app
-RUN ls -la
+RUN /root/.nvm/versions/node/v${NODE_VERSION}/bin/npm install
