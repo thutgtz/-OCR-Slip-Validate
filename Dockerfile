@@ -1,5 +1,10 @@
 # Set docker image
 FROM ubuntu:18.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Bangkok
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 ENV NODE_VERSION=10.24.1
 RUN apt-get update && \
     apt-get install wget curl ca-certificates rsync -y
