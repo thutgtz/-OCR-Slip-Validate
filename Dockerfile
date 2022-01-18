@@ -45,6 +45,7 @@ RUN apt-get install -y bzip2 \
     python3-venv 
 
 RUN alias python='/usr/bin/python3'
+RUN pip3 install --upgrade pip
 RUN pip3 install --no-cache-dir imutils
 RUN pip3 install --no-cache-dir torch==1.10.1+cpu torchvision==0.11.2+cpu torchaudio==0.10.1+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
 RUN pip3 install --no-cache-dir easyocr
