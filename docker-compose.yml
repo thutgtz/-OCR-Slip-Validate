@@ -6,8 +6,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command:  bash -c "npm install && npm start"
     volumes :
       - .:/app
     ports:
       - "5000:5000"
+    command:  bash -c "npm install && npm start"
