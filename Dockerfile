@@ -39,7 +39,6 @@ RUN apt-get install -y libgtk2.0-dev
 RUN apt-get install -y python-numpy 
 RUN apt-get install -y python-pycurl 
 RUN apt-get install -y libatlas-base-dev
-RUN apt-get install -y python-opencv 
 RUN apt-get install -y qt5-default
 RUN apt-get install -y libvtk6-dev 
 RUN apt-get install -y zlib1g-dev
@@ -47,11 +46,12 @@ RUN apt-get install -y python3-venv
 
 RUN alias python='/usr/bin/python3'
 RUN pip3 install imutils
+RUN pip3 install torch==1.10.1+cpu torchvision==0.11.2+cpu torchaudio==0.10.1+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
 RUN pip3 install easyocr
 RUN pip3 install pyzbar
 RUN pip3 install simplejson 
 RUN pip3 install numpy
-RUN pip3 install torch==1.10.1+cpu torchvision==0.11.2+cpu torchaudio==0.10.1+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
+
 
 RUN git clone https://github.com/opencv/opencv_contrib  && \
     cd opencv_contrib  && \
