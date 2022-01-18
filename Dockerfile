@@ -22,30 +22,6 @@ RUN apt-get update && \
 RUN apt-get update && apt-get install -y python3.6 python3-distutils python3-pip python3-apt python3-dev
 RUN apt-get install -y build-essential libzbar-dev
 
-RUN apt-get install -y bzip2 \
-    libx11-6 \
-    cmake \
-    g++ \
-    wget \
-    cmake \
-    unzip \
-    pkg-config \
-    python-opencv \
-    libopencv-dev \ 
-    libjpeg-dev \
-    libpng-dev \
-    libtiff-dev \ 
-    libgtk2.0-dev \
-    python-numpy \
-    python-pycurl \
-    libatlas-base-dev \
-    qt5-default \
-    libvtk6-dev \
-    zlib1g-dev \
-    python3-venv 
-
-RUN alias python='/usr/bin/python3'
-RUN pip3 install imutils
 RUN pip3 install torch==1.10.1+cpu torchvision==0.11.2+cpu torchaudio==0.10.1+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
 RUN pip3 install easyocr
 RUN pip3 install pyzbar
