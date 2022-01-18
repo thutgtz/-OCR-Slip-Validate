@@ -4,7 +4,7 @@ FROM ubuntu:18.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Bangkok
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
+WORKDIR /app
 ENV NODE_VERSION=10.24.1
 RUN apt-get update && \
     apt-get install wget curl ca-certificates rsync -y
@@ -82,6 +82,5 @@ RUN pip3 install --no-cache-dir numpy
 #    make -j$(nproc) && \
 #    make install 
 RUN pip3 install --no-cache-dir zbar-py
-RUN node -v
-WORKDIR /app
-# RUN npm install 
+RUN npm install \ 
+    && npm install nodemon -g
