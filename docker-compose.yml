@@ -8,6 +8,6 @@ services:
       dockerfile: Dockerfile
     command: node .\index.js
     volumes :
-      - ${pwd}:/app
+      - ${PWD}:/app
     ports:
       - "5000:5000"
