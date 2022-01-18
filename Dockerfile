@@ -83,4 +83,4 @@ RUN pip3 install --no-cache-dir numpy
 RUN pip3 install --no-cache-dir zbar-py
 WORKDIR /app
 COPY ./package.json /app
-RUN npm install
+RUN cd /app && npm install
