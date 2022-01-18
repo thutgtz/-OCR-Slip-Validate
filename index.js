@@ -25,6 +25,7 @@ app.use((req, res, next) => {
     console.log(`api is callled %o`, req.originalUrl);
     next();
 });
+/*###################### CREATE API ######################*/
 
 createApi(app);
 
