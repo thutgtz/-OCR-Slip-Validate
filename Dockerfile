@@ -44,8 +44,6 @@ RUN apt-get update && apt-get install -y \
     qt5-default \
     libvtk6-dev \ 
     zlib1g-dev \
-    libcudnn7=7.6.5.32-1+cuda10.2 \
-    libcudnn7-dev=7.6.5.32-1+cuda10.2 \
     python3-venv 
 
 RUN alias python='/usr/bin/python3'
