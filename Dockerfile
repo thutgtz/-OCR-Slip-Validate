@@ -81,7 +81,7 @@ RUN pip3 install --no-cache-dir numpy
 #      -Dopencv_dnn_superres=ON /usr/bin/ .. && \
 #    make -j$(nproc) && \
 #    make install 
-
+RUN apt-get install python3-setuptools
 RUN pip3 install --no-cache-dir zbar
 WORKDIR /app
 RUN npm install 
