@@ -51,7 +51,7 @@ RUN pip3 install --no-cache-dir pyzbar
 RUN pip3 install --no-cache-dir simplejson 
 RUN pip3 install --no-cache-dir numpy
 RUN pip3 install --no-cache-dir zbar-py
-RUN pip uninstall opencv-python-headless==4.5.5.62 
+RUN pip uninstall -y opencv-python-headless==4.5.5.62 
 RUN pip install opencv-python-headless==4.1.2.30
 ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 RUN apt-get install -y language-pack-en
