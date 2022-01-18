@@ -11,4 +11,4 @@ services:
       - .:/app
     ports:
       - "5000:5000"
-    command:  ls -la
+    command:  bash -c "cd /app && npm start"
