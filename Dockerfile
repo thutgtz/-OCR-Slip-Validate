@@ -81,4 +81,7 @@ RUN pip3 install --no-cache-dir numpy
 #    make install 
 RUN pip3 install --no-cache-dir zbar-py
 ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+RUN apt-get install -y language-pack-en
+ENV LANG="en_US.UTF-8"
+ENV LC_ALL="en_US.UTF-8"
 WORKDIR /app
