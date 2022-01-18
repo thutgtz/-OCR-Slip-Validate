@@ -17,33 +17,28 @@ RUN apt-get update && \
 RUN apt-get update && apt-get install -y python3.6 python3-distutils python3-pip python3-apt python3-dev
 RUN apt-get install -y build-essential libzbar-dev
 
-RUN apt-get update && apt-get install -y \
-    git \
-    bzip2 \
-    libx11-6 \
-    cmake \
-    g++ \
-    wget \
-    cmake \ 
-    git \
-    unzip \ 
-    pkg-config \
-    python-opencv \ 
-    libopencv-dev \ 
-    libjpeg-dev \ 
-    libpng-dev \ 
-    libtiff-dev \  
-    libgtk2.0-dev \ 
-    python-numpy \ 
-    python-pycurl \ 
-    libatlas-base-dev \
-    gfortran \
-    webp \ 
-    python-opencv \ 
-    qt5-default \
-    libvtk6-dev \ 
-    zlib1g-dev \
-    python3-venv 
+RUN apt-get install -y bzip2 
+RUN apt-get install -y libx11-6
+RUN apt-get install -y cmake
+RUN apt-get install -y g++ 
+RUN apt-get install -y wget
+RUN apt-get install -y cmake
+RUN apt-get install -y unzip 
+RUN apt-get install -y pkg-config
+RUN apt-get install -y python-opencv
+RUN apt-get install -y libopencv-dev 
+RUN apt-get install -y libjpeg-dev 
+RUN apt-get install -y libpng-dev 
+RUN apt-get install -y libtiff-dev  
+RUN apt-get install -y libgtk2.0-dev 
+RUN apt-get install -y python-numpy 
+RUN apt-get install -y python-pycurl 
+RUN apt-get install -y libatlas-base-dev
+RUN apt-get install -y python-opencv 
+RUN apt-get install -y qt5-default
+RUN apt-get install -y libvtk6-dev 
+RUN apt-get install -y zlib1g-dev
+RUN apt-get install -y python3-venv 
 
 RUN alias python='/usr/bin/python3'
 RUN pip3 install imutils
