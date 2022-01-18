@@ -46,7 +46,7 @@ RUN apt-get install -y python3-venv
 
 RUN alias python='/usr/bin/python3'
 RUN pip3 install imutils
-RUN pip3 install torch==1.10.1+cpu torchvision==0.11.2+cpu torchaudio==0.10.1+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
+RUN pip3 install torch==1.9.0+cpu torchvision==0.10.0+cpu torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
 RUN pip3 install easyocr
 RUN pip3 install pyzbar
 RUN pip3 install simplejson 
