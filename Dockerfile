@@ -53,33 +53,34 @@ RUN pip3 install --no-cache-dir pyzbar
 RUN pip3 install --no-cache-dir simplejson 
 RUN pip3 install --no-cache-dir numpy
 
-RUN git clone https://github.com/opencv/opencv_contrib  && \
-    cd opencv_contrib  && \
-    git fetch --all --tags  && \
-    git checkout tags/4.3.0  && \
-    cd .. && \
-    git clone https://github.com/opencv/opencv.git  && \
-    cd opencv  && \
-    git checkout tags/4.3.0   
+# RUN apt-get install -y git
+# RUN git clone https://github.com/opencv/opencv_contrib  && \
+#     cd opencv_contrib  && \
+#     git fetch --all --tags  && \
+#     git checkout tags/4.3.0  && \
+#     cd .. && \
+#     git clone https://github.com/opencv/opencv.git  && \
+#     cd opencv  && \
+#     git checkout tags/4.3.0   
 
-RUN pwd &&\
-   cd opencv  && \
-   pwd &&\
-   mkdir build && cd build && \
-   pwd &&\
-   cmake -DCMAKE_BUILD_TYPE=Release  \
-     -DENABLE_CXX14=ON                 \
-     -DBUILD_PERF_TESTS=OFF            \
-     -DOPENCV_GENERATE_PKGCONFIG=ON    \
-     -DWITH_XINE=ON                    \
-     -DBUILD_TESTS=OFF                 \
-     -DENABLE_PRECOMPILED_HEADERS=OFF  \
-     -DCMAKE_SKIP_RPATH=ON             \
-     -DBUILD_WITH_DEBUG_INFO=OFF       \
-     -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules  \
-     -Dopencv_dnn_superres=ON /usr/bin/ .. && \
-   make -j$(nproc) && \
-   make install 
+# RUN pwd &&\
+#    cd opencv  && \
+#    pwd &&\
+#    mkdir build && cd build && \
+#    pwd &&\
+#    cmake -DCMAKE_BUILD_TYPE=Release  \
+#      -DENABLE_CXX14=ON                 \
+#      -DBUILD_PERF_TESTS=OFF            \
+#      -DOPENCV_GENERATE_PKGCONFIG=ON    \
+#      -DWITH_XINE=ON                    \
+#      -DBUILD_TESTS=OFF                 \
+#      -DENABLE_PRECOMPILED_HEADERS=OFF  \
+#      -DCMAKE_SKIP_RPATH=ON             \
+#      -DBUILD_WITH_DEBUG_INFO=OFF       \
+#      -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules  \
+#      -Dopencv_dnn_superres=ON /usr/bin/ .. && \
+#    make -j$(nproc) && \
+#    make install 
 
 RUN pip3 install --no-cache-dir zbar
 WORKDIR /app
