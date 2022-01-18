@@ -4,7 +4,6 @@ import math
 import cv2
 import re
 import imutils
-from google.colab.patches import cv2_imshow
 import numpy as np
 import easyocr
 from matplotlib import pyplot as plt
