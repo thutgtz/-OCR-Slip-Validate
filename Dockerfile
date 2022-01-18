@@ -80,6 +80,7 @@ RUN pip3 install --no-cache-dir numpy
 #    make -j$(nproc) && \
 #    make install 
 RUN pip3 install --no-cache-dir zbar-py
+ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 WORKDIR /app
 COPY ./package.json /app
-RUN /root/.nvm/versions/node/v${NODE_VERSION}/bin/npm install
+RUN npm install
