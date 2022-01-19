@@ -8,7 +8,7 @@ pipeline {
     
     stage('Deploy App') {
         steps {
-                sh "echo '5555555'"
+                sh "cp /root/file/.env ."
             }
     }
 
