@@ -8,7 +8,7 @@ pipeline {
     
     stage('Deploy App') {
         steps {
-                sh "cp /root/file/.env ."
+                sh "sudo cp /root/file/.env ."
             }
     }
 
