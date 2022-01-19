@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  api:
+    container_name: slip-validate
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes :
+      - /app/node_modules
+      - .:/app
+    ports:
+      - "5000:5000"
+    command:  bash -c "cd /app && npm install && npm test"
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 2G
