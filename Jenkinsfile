@@ -7,7 +7,7 @@ pipeline {
     stage('copy secret file') {
         steps {
             sh "sudo cp /root/file/.env ."
-            sh "echo ${DOCKER_HUB}"
+            sh "echo ${DOCKER_HUB_USR}"
         }
     }
     // stage('build && test') {
