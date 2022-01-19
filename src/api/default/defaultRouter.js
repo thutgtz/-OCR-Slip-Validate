@@ -6,4 +6,8 @@ route.post('/slip-validate',
     defaultController.slipValidate
 )
 
+route.get('/check',
+    defaultController.Check
+)
+
 module.exports = route;

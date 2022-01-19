@@ -16,7 +16,10 @@ class defaultController {
             console.log(err)
             failed(res, err)
         }
+    }
 
+    async Check(req, res) {
+        successed(res)
     }
 }
 
