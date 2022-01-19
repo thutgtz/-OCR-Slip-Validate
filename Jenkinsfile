@@ -8,6 +8,7 @@ pipeline {
 
     stage('Deploy App') {
         steps {
+                sh "whoami"
                 sh "sudo cp /root/file/.env ."
             }
     }
