@@ -3,7 +3,6 @@ version: '3'
 services:
   api:
     container_name: slip-validate
-    image: thutgtz/slip-validate:dev
     build:
       context: .
       dockerfile: Dockerfile
@@ -12,8 +11,4 @@ services:
       - .:/app
     ports:
       - "5000:5000"
-    command: npm test
-    # deploy:
-    #   resources:
-    #     limits:
-    #       memory: 2G
+    command: npm start
