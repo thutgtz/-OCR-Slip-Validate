@@ -14,6 +14,7 @@ pipeline {
         }
     }
     
+
     stage('build && test') {
         steps {
             sh "sudo docker-compose -f docker-compose.yml build"
