@@ -27,9 +27,9 @@ pipeline {
         steps {
             sh "sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin"
             sh "sudo docker-compose -f docker-compose.yml build"
-            sh "sudo docker image tag thutgtz/slip-validate:dev thutgtz/slip-validate:0.1"
+            sh "sudo docker image tag thutgtz/slip-validate:dev thutgtz/slip-validate:${env.GIT_COMMIT_MSG}"
             sh "sudo docker rmi thutgtz/slip-validate:dev"
-            sh "sudo docker push thutgtz/slip-validate:0.1"
+            sh "sudo docker push thutgtz/slip-validate:${env.GIT_COMMIT_MSG}"
         }
     }
     stage('deploy (Not main)') {
@@ -52,7 +52,7 @@ pipeline {
                 sudo mkdir -p /root/app;
                 sudo docker container stop \$(docker container ls -qa --filter name=slip*) || true;
                 sudo docker container rm \$(docker container ls -qa --filter name=slip*) || true;
-                sudo docker run -d --name slip-validate-v${env.GIT_COMMIT_MSG} -p 5000:5000 thutgtz/slip-validate:${env.GIT_COMMIT_MSG};
+                sudo docker run -d --name slip-validate-v${env.GIT_COMMIT_MSG} -p 5000:5000 thutgtz/slip-validate:${env.GIT_COMMIT_MSG}
                 EOF"""
         }
     }
