@@ -19,7 +19,6 @@ pipeline {
     stage('push') {
         steps {
             sh "sudo docker login -u=$DOCKER_HUB_USR -p=$DOCKER_HUB_PSW"
-            sh "sudo docker-compose -f docker-compose.dev.yml build"
             sh "sudo docker-compose -f docker-compose.dev.yml push"
         }
     }
