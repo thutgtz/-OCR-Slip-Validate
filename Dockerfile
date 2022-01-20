@@ -59,3 +59,4 @@ ENV LANG="en_US.UTF-8"
 ENV LC_ALL="en_US.UTF-8"
 WORKDIR /app
 COPY . /app
+RUN npm install
