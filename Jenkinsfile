@@ -48,13 +48,12 @@ pipeline {
         }
         steps{
             sh """SSHPASS=$SSH_PSW sshpass -e ssh -o StrictHostKeyChecking=no $SSH_USR@68.183.226.229 << EOF 
-                    sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin;
-                    sudo mkdir -p /root/app;
-                    sudo docker container stop $NAME-v$VERSIONS || true;
-                    sudo docker container rm $NAME-v$VERSIONS || true;
-                    sudo docker run -d --name $NAME-v$VERSIONS -p $PORTS:5000 $DOCKER_HUB_USR/$NAME:$VERSIONS;
-                EOF
-                """.stripIndent()
+                    sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin
+                    sudo mkdir -p /root/app
+                    sudo docker container stop $NAME-v$VERSIONS || true
+                    sudo docker container rm $NAME-v$VERSIONS || true
+                    sudo docker run -d --name $NAME-v$VERSIONS -p $PORTS:5000 $DOCKER_HUB_USR/$NAME:$VERSIONS
+                    EOF""".stripIndent()
         }
     }
 
