@@ -3,18 +3,17 @@ pipeline {
   environment {
       DOCKER_HUB = credentials('DOCKER_HUB')
       SSH = credentials('SSH')
+      BRANCH_NAME = getCurrentBranch()
       GIT_COMMIT_MSG = getCommitMessage()
   }
   stages {
     stage('copy secret file') {
         steps {
             sh "sudo echo ${GIT_COMMIT_MSG}"
-            sh "sudo echo ${env.BRANCH_NAME}"
+            sh "sudo echo ${BRANCH_NAME}"
             sh "sudo cp /root/file/.env ."
         }
     }
-    
-
     stage('build && test') {
         steps {
             sh "sudo docker-compose -f docker-compose.yml build"
