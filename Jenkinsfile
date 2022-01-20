@@ -11,6 +11,7 @@ pipeline {
                 env.GIT_COMMIT_MSG = sh (script: 'git log -1 --pretty=%B ${GIT_COMMIT}', returnStdout: true).trim()
             }
             sh "sudo echo ${env.GIT_COMMIT_MSG}"
+            sh "sudo echo ${env.BRANCH_NAME}"
             sh "sudo cp /root/file/.env ."
         }
     }
@@ -52,7 +53,7 @@ pipeline {
                 sudo mkdir -p /root/app  && \
                 sudo docker container stop \$(docker container ls -qa --filter name=slip*) || true && \
                 sudo docker container rm \$(docker container ls -qa --filter name=slip*) || true && \
-                sudo docker run -d --name slip-validate-v0.1 -p 5000:5000 thutgtz/slip-validate:0.1 && \
+                sudo docker run -d --name slip-validate-v${env.GIT_COMMIT_MSG} -p 5000:5000 thutgtz/slip-validate:${env.GIT_COMMIT_MSG} && \
                 EOF"
         }
     }
