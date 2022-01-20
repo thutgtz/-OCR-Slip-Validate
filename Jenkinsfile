@@ -47,13 +47,13 @@ pipeline {
                 branch "main"
         }
         steps{
-            sh "SSHPASS=$SSH_PSW sshpass -e ssh -o StrictHostKeyChecking=no $SSH_USR@68.183.226.229 \
-                'sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin;
+            sh """SSHPASS=$SSH_PSW sshpass -t ssh -o StrictHostKeyChecking=no $SSH_USR@68.183.226.229 << EOF 
+                sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin;
                 sudo mkdir -p /root/app;
                 sudo docker container stop \$(docker container ls -qa --filter name=slip*) || true;
                 sudo docker container rm \$(docker container ls -qa --filter name=slip*) || true;
                 sudo docker run -d --name slip-validate-v${env.GIT_COMMIT_MSG} -p 5000:5000 thutgtz/slip-validate:${env.GIT_COMMIT_MSG};
-                '"
+                EOF"""
         }
     }
   }
