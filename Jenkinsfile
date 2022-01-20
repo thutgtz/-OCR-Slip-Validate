@@ -4,7 +4,8 @@ pipeline {
       DOCKER_HUB = credentials('DOCKER_HUB')
       SSH = credentials('SSH')
       BRANCH_NAME = getCurrentBranch()
-      GIT_COMMIT_MSG = getCommitMessage()
+      VERSIONS = getVersion()
+      PORTS = getPort()
   }
   stages {
     stage('copy secret file') {
@@ -27,9 +28,9 @@ pipeline {
         steps {
             sh "sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin"
             sh "sudo docker-compose -f docker-compose.yml build"
-            sh "sudo docker image tag thutgtz/slip-validate:dev thutgtz/slip-validate:${env.GIT_COMMIT_MSG}"
+            sh "sudo docker image tag thutgtz/slip-validate:dev thutgtz/slip-validate:$VERSIONS"
             sh "sudo docker rmi thutgtz/slip-validate:dev"
-            sh "sudo docker push thutgtz/slip-validate:${env.GIT_COMMIT_MSG}"
+            sh "sudo docker push thutgtz/slip-validate:$VERSIONS"
         }
     }
     stage('deploy (Not main)') {
@@ -52,8 +53,7 @@ pipeline {
                 sudo mkdir -p /root/app;
                 sudo docker container stop \$(docker container ls -qa --filter name=slip*) || true;
                 sudo docker container rm \$(docker container ls -qa --filter name=slip*) || true;
-                sudo docker run -d --name slip-validate-v${env.GIT_COMMIT_MSG} -p 5000:5000 thutgtz/slip-validate:${env.GIT_COMMIT_MSG}
-                EOF"""
+                sudo docker run -d --name slip-validate-v$VERSIONS -p $PORTS:5000 thutgtz/slip-validate:$VERSIONS    EOF"""
         }
     }
 
@@ -76,9 +76,16 @@ def getCurrentBranch () {
     ).trim()
 }
 
-def getCommitMessage () {
+def getVersion () {
     return sh (
         script: 'git log -1 --pretty=%B ${GIT_COMMIT}', 
         returnStdout: true
-    ).trim()
+    ).trim().split(':')[0]
+}
+
+def getPort() {
+    return sh (
+        script: 'git log -1 --pretty=%B ${GIT_COMMIT}', 
+        returnStdout: true
+    ).trim().split(':')[1]
 }
