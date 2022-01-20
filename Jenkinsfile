@@ -11,7 +11,7 @@ pipeline {
                 env.GIT_COMMIT_MSG = sh (script: 'git log -1 --pretty=%B ${GIT_COMMIT}', returnStdout: true).trim()
             }
             sh "sudo echo ${env.GIT_COMMIT_MSG}"
-            sh "sudo echo ${env.BRANCH_NAME}"
+            sh "sudo echo ${BRANCH_NAME}"
             sh "sudo cp /root/file/.env ."
         }
     }
