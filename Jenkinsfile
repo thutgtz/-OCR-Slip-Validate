@@ -18,14 +18,14 @@ pipeline {
     }
     stage('push') {
         steps {
-            sh "echo $DOCKER_HUB_PSW | sudo docker login --username $DOCKER_HUB_USR --password-stdin"
+            sh "sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin"
             sh "sudo docker-compose -f docker-compose.dev.yml push"
         }
     }
     stage('deploy'){
         steps{
             sh "SSHPASS=$SSH_PSW sshpass -e ssh -o StrictHostKeyChecking=no $SSH_USR@68.183.226.229"
-            sh "echo $DOCKER_HUB_PSW | sudo docker login --username $DOCKER_HUB_USR --password-stdin"
+            sh "sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin"
             sh "sudo mkdir -p /root/app"
             sh "sudo docker run -d -v /root/app:/app thutgtz/slip-validate:dev"
             sh "exit"
