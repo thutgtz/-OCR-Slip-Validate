@@ -3,6 +3,7 @@ pipeline {
   environment {
       DOCKER_HUB = credentials('DOCKER_HUB')
       SSH = credentials('SSH')
+      BRANCH_NAME = getCurrentBranch()
   }
   stages {
     stage('copy secret file') {
@@ -11,7 +12,7 @@ pipeline {
                 env.GIT_COMMIT_MSG = sh (script: 'git log -1 --pretty=%B ${GIT_COMMIT}', returnStdout: true).trim()
             }
             sh "sudo echo ${env.GIT_COMMIT_MSG}"
-            sh "sudo echo ${env.BRANCH_NAME}"
+            sh "sudo echo ${BRANCH_NAME}"
             sh "sudo cp /root/file/.env ."
         }
     }
@@ -67,4 +68,11 @@ pipeline {
     }
   }   
 
+}
+
+def getCurrentBranch () {
+    return sh (
+        script: 'git rev-parse --abbrev-ref HEAD',
+        returnStdout: true
+    ).trim()
 }
