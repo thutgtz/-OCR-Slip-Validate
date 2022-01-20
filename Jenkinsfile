@@ -45,7 +45,7 @@ pipeline {
                 branch "main"
         }
         steps{
-            sh "SSHPASS=$SSH_PSW sshpass -e ssh -o StrictHostKeyChecking=no $SSH_USR@68.183.226.229 << EOF
+            sh "SSHPASS=$SSH_PSW sshpass -e ssh -o StrictHostKeyChecking=no $SSH_USR@68.183.226.229 << EOF \
                 sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin && \
                 sudo mkdir -p /root/app  && \
                 sudo docker container stop $(docker container ls -qa --filter name=slip*) && \
