@@ -53,7 +53,6 @@ pipeline {
                         sudo docker container stop $NAME-v$VERSIONS || true
                         sudo docker container rm $NAME-v$VERSIONS || true
                         sudo docker run -d --name $NAME-v$VERSIONS -p $PORTS:5000 $DOCKER_HUB_USR/$NAME:$VERSIONS
-                    EOF
                 """
         }
     }
