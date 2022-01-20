@@ -10,8 +10,6 @@ pipeline {
   stages {
     stage('copy secret file') {
         steps {
-            sh "sudo echo ${GIT_COMMIT_MSG}"
-            sh "sudo echo ${BRANCH_NAME}"
             sh "sudo cp /root/file/.env ."
         }
     }
