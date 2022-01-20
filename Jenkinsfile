@@ -51,7 +51,7 @@ pipeline {
                 sudo mkdir -p /root/app;
                 sudo docker container stop \$(docker container ls -qa --filter name=slip*) || true;
                 sudo docker container rm \$(docker container ls -qa --filter name=slip*) || true;
-                sudo docker run -d --name slip-validate-v$VERSIONS -p $PORTS:5000 thutgtz/slip-validate:$VERSIONS    EOF"""
+                sudo docker run -d --name slip-validate-v$VERSIONS -p $PORTS:5000 thutgtz/slip-validate:$VERSIONS;    EOF"""
         }
     }
 
