@@ -12,7 +12,6 @@ pipeline {
             sh "sudo echo ${GIT_COMMIT_MSG}"
             sh "sudo echo ${BRANCH_NAME}"
             sh "sudo cp /root/file/.env ."
-            
         }
     }
     stage('build && test') {
