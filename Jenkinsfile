@@ -28,7 +28,7 @@ pipeline {
             sh "sudo docker login -u=$DOCKER_HUB_USR -p=$DOCKER_HUB_PSW"
             sh "sudo mkdir -p /root/app"
             sh "sudo docker run -d -v /root/app:/app thutgtz/slip-validate:dev"
-            SH "exit"
+            sh "exit"
         }
     }
   }
