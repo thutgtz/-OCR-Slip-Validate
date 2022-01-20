@@ -6,6 +6,7 @@ pipeline {
       BRANCH_NAME = getCurrentBranch()
       VERSIONS = getVersion()
       PORTS = getPort()
+      NAME = 'slip-validate'
   }
   stages {
     stage('copy secret file') {
@@ -16,8 +17,8 @@ pipeline {
     stage('build && test') {
         steps {
             sh "sudo docker-compose -f docker-compose.yml build"
-            sh "sudo docker container stop \$(docker container ls -qa --filter name=slip*) || true && \
-                sudo docker container rm \$(docker container ls -qa --filter name=slip*) || true"
+            sh "sudo docker container stop $NAME || true && \
+                sudo docker container rm $NAME || true"
             sh "sudo docker-compose -f docker-compose.yml up"
         }
     }
@@ -26,9 +27,9 @@ pipeline {
         steps {
             sh "sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin"
             sh "sudo docker-compose -f docker-compose.yml build"
-            sh "sudo docker image tag thutgtz/slip-validate:dev thutgtz/slip-validate:$VERSIONS"
-            sh "sudo docker rmi thutgtz/slip-validate:dev"
-            sh "sudo docker push thutgtz/slip-validate:$VERSIONS"
+            sh "sudo docker image tag $DOCKER_HUB_USR/$NAME:dev $DOCKER_HUB_USR/$NAME:$VERSIONS"
+            sh "sudo docker rmi $DOCKER_HUB_USR/$NAME:dev"
+            sh "sudo docker push $DOCKER_HUB_USR/$NAME:$VERSIONS"
         }
     }
     stage('deploy (Not main)') {
@@ -47,11 +48,13 @@ pipeline {
         }
         steps{
             sh """SSHPASS=$SSH_PSW sshpass -e ssh -o StrictHostKeyChecking=no $SSH_USR@68.183.226.229 << EOF 
-                sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin;
-                sudo mkdir -p /root/app;
-                sudo docker container stop \$(docker container ls -qa --filter name=slip*) || true;
-                sudo docker container rm \$(docker container ls -qa --filter name=slip*) || true;
-                sudo docker run -d --name slip-validate-v$VERSIONS -p $PORTS:5000 thutgtz/slip-validate:$VERSIONS;    EOF"""
+                    sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin;
+                    sudo mkdir -p /root/app;
+                    sudo docker container stop $NAME-v$VERSIONS || true;
+                    sudo docker container rm $NAME-v$VERSIONS || true;
+                    sudo docker run -d --name $NAME-v$VERSIONS -p $PORTS:5000 $DOCKER_HUB_USR/$NAME:$VERSIONS;
+                EOF
+                """
         }
     }
 
