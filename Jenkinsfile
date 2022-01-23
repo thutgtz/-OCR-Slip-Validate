@@ -27,7 +27,7 @@ pipeline {
         }
         steps {
             sh "sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin"
-            sh "sudo docker-compose -f docker-compose.yml push"
+            sh "sudo docker push $DOCKER_HUB_USR/$NAME:dev"
         }
     }
     stage('push') {
@@ -53,6 +53,7 @@ pipeline {
                 sudo mkdir -p /root/app;
                 sudo docker container stop $NAME-dev || true;
                 sudo docker container rm $NAME-dev || true;
+                sudo docker rmi $DOCKER_HUB_USR/$NAME:dev || true; 
                 sudo docker run -d --name $NAME-dev -p 4999:5000 $DOCKER_HUB_USR/$NAME:dev;"
                 """
         }
