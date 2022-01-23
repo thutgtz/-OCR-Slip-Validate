@@ -15,6 +15,9 @@ pipeline {
         }
     }
     stage('build && test') {
+         when {
+            branch "main"
+        }
         steps {
             sh "sudo docker-compose -f docker-compose.yml build"
             sh "sudo docker container stop $NAME || true && \
@@ -22,12 +25,14 @@ pipeline {
             sh "sudo docker-compose -f docker-compose.yml up"
         }
     }
-    stage('build && test') {
+    stage('push (dev)') {
+        when {
+            branch "dev"
+        }
         steps {
+            sh "sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin"
             sh "sudo docker-compose -f docker-compose.yml build"
-            sh "sudo docker container stop $NAME || true && \
-                sudo docker container rm $NAME || true"
-            sh "sudo docker-compose -f docker-compose.yml up"
+            sh "sudo docker-compose -f docker-compose.yml push"
         }
     }
     stage('push') {
@@ -42,14 +47,20 @@ pipeline {
             sh "sudo docker push $DOCKER_HUB_USR/$NAME:$VERSIONS"
         }
     }
-    stage('deploy (Not main)') {
+    stage('deploy (dev)') {
         when {
             not {
-                branch "main"
+                branch "dev"
             }
         }
-        steps {
-            sh "sudo echo eiei"
+        steps{
+            sh """SSHPASS=$SSH_PSW sshpass -e ssh -o StrictHostKeyChecking=no $SSH_USR@68.183.226.229 \
+                "sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin;
+                sudo mkdir -p /root/app;
+                sudo docker container stop $NAME-dev || true;
+                sudo docker container rm $NAME-dev || true;
+                sudo docker run -d --name $NAME-dev -p 4999:5000 $DOCKER_HUB_USR/$NAME:dev;"
+                """
         }
     }
     stage('deploy'){
