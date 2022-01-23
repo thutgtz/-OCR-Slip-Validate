@@ -22,7 +22,7 @@ pipeline {
             sh "sudo docker-compose -f docker-compose.yml build"
             sh "sudo docker container stop $NAME || true && \
                 sudo docker container rm $NAME || true"
-            sh "sudo docker-compose -f docker-compose.yml up"
+            sh "sudo docker-compose -f docker-compose.yml up --build --force-recreate"
         }
     }
     stage('push (dev)') {
@@ -31,7 +31,7 @@ pipeline {
         }
         steps {
             sh "sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin"
-            sh "sudo docker-compose -f docker-compose.yml build"
+            sh "sudo docker-compose -f docker-compose.yml build --build --force-recreate"
             sh "sudo docker-compose -f docker-compose.yml push"
         }
     }
@@ -41,7 +41,7 @@ pipeline {
         }
         steps {
             sh "sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin"
-            sh "sudo docker-compose -f docker-compose.yml build"
+            sh "sudo docker-compose -f docker-compose.yml build --build --force-recreate"
             sh "sudo docker image tag $DOCKER_HUB_USR/$NAME:dev $DOCKER_HUB_USR/$NAME:$VERSIONS"
             sh "sudo docker rmi $DOCKER_HUB_USR/$NAME:dev"
             sh "sudo docker push $DOCKER_HUB_USR/$NAME:$VERSIONS"
