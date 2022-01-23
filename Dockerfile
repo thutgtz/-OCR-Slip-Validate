@@ -59,6 +59,6 @@ ENV LANG="en_US.UTF-8"
 ENV LC_ALL="en_US.UTF-8"
 WORKDIR /app
 COPY ./package.json /app
-RUN npm install -g nodemon --unsafe-perm=true --allow-root && npm install
+RUN npm install -g nodemon --unsafe-perm=true --allow-root
 COPY . /app
 CMD ["node" , "index.js"]
