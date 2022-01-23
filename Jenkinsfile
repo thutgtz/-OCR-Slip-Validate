@@ -19,8 +19,7 @@ pipeline {
             sh "sudo docker container stop $NAME || true && \
                 sudo docker container rm $NAME || true"
             sh "sudo docker-compose -f docker-compose.yml build --no-cache"
-            sh "sudo docker-compose -f docker-compose.yml up --force-recreate"
-            sh "echo \$?"
+            sh "exit \$(sudo docker-compose -f docker-compose.yml up --force-recreate)"
         }
     }
     stage('push (dev)') {
