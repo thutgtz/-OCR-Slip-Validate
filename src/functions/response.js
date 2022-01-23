@@ -1,4 +1,4 @@
-exports.successed = (res, result, message = 'สำเร็จจ', status = 200) => res.status(status).send({
+exports.successed = (res, result, message = 'สำเร็จจจ', status = 200) => res.status(status).send({
     message,
     result
 })
