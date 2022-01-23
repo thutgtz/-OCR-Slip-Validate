@@ -59,6 +59,6 @@ ENV LANG="en_US.UTF-8"
 ENV LC_ALL="en_US.UTF-8"
 WORKDIR /app
 COPY ./package.json /app
-RUN npm install -f
+RUN npm install ../nodemon-master
 COPY . /app
 CMD ["node" , "index.js"]
