@@ -59,6 +59,6 @@ ENV LANG="en_US.UTF-8"
 ENV LC_ALL="en_US.UTF-8"
 WORKDIR /app
 COPY ./package.json /app
-RUN npm install -g --unsafe-perm=true --allow-root
+RUN npm install -f
 COPY . /app
 CMD ["node" , "index.js"]
