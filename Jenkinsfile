@@ -18,12 +18,15 @@ pipeline {
         steps {
             sh "sudo docker container stop $NAME || true && \
                 sudo docker container rm $NAME || true"
-            sh "sudo docker-compose -f docker-compose.yml up --force-recreate"
+            sh "sudo docker-compose -f docker-compose.yml up --no-cache --force-recreate"
+            sh "echo $?"
         }
     }
     stage('push (dev)') {
         when {
-            branch "dev"
+            not {
+                branch "main"
+            }
         }
         steps {
             sh "sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin"
@@ -44,7 +47,7 @@ pipeline {
     stage('deploy (dev)') {
         when {
             not {
-                branch "dev"
+                branch "main"
             }
         }
         steps{
