@@ -20,7 +20,7 @@ pipeline {
                 sudo docker container rm $NAME || true"
             sh "sudo docker-compose -f docker-compose.yml build --no-cache"
             sh "sudo docker-compose -f docker-compose.yml up --force-recreate"
-            sh "exit \$?"
+            sh "exit \$(docker inspect slip-validate --format='{{.State.ExitCode}}')"
         }
     }
     stage('push (dev)') {
