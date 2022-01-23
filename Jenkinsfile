@@ -22,8 +22,18 @@ pipeline {
             sh "sudo docker-compose -f docker-compose.yml up"
         }
     }
- 
+    stage('build && test') {
+        steps {
+            sh "sudo docker-compose -f docker-compose.yml build"
+            sh "sudo docker container stop $NAME || true && \
+                sudo docker container rm $NAME || true"
+            sh "sudo docker-compose -f docker-compose.yml up"
+        }
+    }
     stage('push') {
+        when {
+            branch "main"
+        }
         steps {
             sh "sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin"
             sh "sudo docker-compose -f docker-compose.yml build"
