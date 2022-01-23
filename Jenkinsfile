@@ -15,9 +15,6 @@ pipeline {
         }
     }
     stage('build && test') {
-         when {
-            branch "main"
-        }
         steps {
             sh "sudo docker-compose -f docker-compose.yml build"
             sh "sudo docker container stop $NAME || true && \
