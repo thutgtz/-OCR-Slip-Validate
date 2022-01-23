@@ -16,7 +16,7 @@ describe("Check Test", function () {
                 .get('/check')
                 .send({})
                 .end(function (err, res) {
-                    expect(JSON.stringify(res.body)).to.equal(JSON.stringify({ "message": "สำเร็จจจ" }));
+                    expect(JSON.stringify(res.body)).to.equal(JSON.stringify({ "message": "สำเร็จจจจ" }));
                     done();
                 });
         });
