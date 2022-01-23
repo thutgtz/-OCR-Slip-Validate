@@ -67,6 +67,7 @@ pipeline {
                 sudo mkdir -p /root/app;
                 sudo docker container stop $NAME-v$VERSIONS || true;
                 sudo docker container rm $NAME-v$VERSIONS || true;
+                sudo docker rmi $DOCKER_HUB_USR/$NAME:$VERSIONS || true; 
                 sudo docker run -d --name $NAME-v$VERSIONS -p $PORTS:5000 $DOCKER_HUB_USR/$NAME:$VERSIONS;"
                 """
         }
