@@ -16,7 +16,6 @@ pipeline {
     }
     stage('build && test') {
         steps {
-            sh "sudo docker-compose -f docker-compose.yml build"
             sh "sudo docker container stop $NAME || true && \
                 sudo docker container rm $NAME || true"
             sh "sudo docker-compose -f docker-compose.yml up --force-recreate"

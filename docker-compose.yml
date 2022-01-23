@@ -7,9 +7,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes :
-      - /app/node_modules
-      - .:/app
     ports:
       - "5000:5000"
     command: npm test
