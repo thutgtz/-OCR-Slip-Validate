@@ -45,6 +45,7 @@ pipeline {
             sh "sudo docker push $DOCKER_HUB_USR/$NAME:$VERSIONS"
         }
     }
+    
     stage('deploy (dev)') {
         when {
             not {
