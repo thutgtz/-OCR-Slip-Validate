@@ -19,7 +19,7 @@ describe("Check Test", function () {
                     expect(JSON.stringify(res.body)).to.equal(JSON.stringify({
                         "message": "สำเร็จ",
                         "result": {
-                            v: 'dev'
+                            v: 0.1
                         }
                     }));
                     done();
