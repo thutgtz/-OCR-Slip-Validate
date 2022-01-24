@@ -20,6 +20,7 @@ class defaultController {
 
     async Check(req, res) {
         successed(res, { v: 'dev' })
+
     }
 }
 
