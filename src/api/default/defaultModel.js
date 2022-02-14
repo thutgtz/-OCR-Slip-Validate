@@ -9,6 +9,23 @@ exports.slipValidate = (obj) => new Promise(async (resolve, reject) => {
     script.send(JSON.stringify(obj));
     script.on('message', (message) => {
         if (message.slice(0, 4) == 'JSON') resolve(message.slice(5, message.length));
+        else console.log(message)
+    })
+    script.on('error', (message) => {
+        console.log(message)
+        reject(message || '')
+    })
+    script.end((err) => reject(err || ''));
+})
+
+exports.ValidateQR = (obj) => new Promise(async (resolve, reject) => {
+    const script = new PythonShell(
+        path.join(__dirname, '../../../scripts/QRvalidate.py'),
+        { mode: 'text' }
+    )
+    script.send(JSON.stringify(obj));
+    script.on('message', (message) => {
+        if (message.slice(0, 4) == 'JSON') resolve(message.slice(5, message.length));
     })
     script.on('error', (message) => {
         console.log(message)

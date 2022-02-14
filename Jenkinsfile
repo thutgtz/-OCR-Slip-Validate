@@ -6,7 +6,7 @@ pipeline {
       BRANCH_NAME = getCurrentBranch()
       VERSIONS = getVersion()
       PORTS = getPort()
-      NAME = 'slip-validate'
+      NAME = 'slip-validate-new'
   }
   stages {
     stage('copy secret file') {
@@ -20,7 +20,7 @@ pipeline {
                 sudo docker container rm $NAME || true"
             sh "sudo docker-compose -f docker-compose.yml build --no-cache"
             sh "sudo docker-compose -f docker-compose.yml up --force-recreate"
-            sh "exit \$(docker inspect slip-validate --format='{{.State.ExitCode}}')"
+            sh "exit \$(docker inspect $NAME --format='{{.State.ExitCode}}')"
         }
     }
     stage('push (dev)') {
@@ -45,38 +45,38 @@ pipeline {
             sh "sudo docker push $DOCKER_HUB_USR/$NAME:$VERSIONS"
         }
     }
-    stage('deploy (dev)') {
-        when {
-            not {
-                branch "main"
-            }
-        }
-        steps{
-            sh """SSHPASS=$SSH_PSW sshpass -e ssh -o StrictHostKeyChecking=no $SSH_USR@68.183.226.229 \
-                "sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin;
-                sudo mkdir -p /root/app;
-                sudo docker container stop $NAME-dev || true;
-                sudo docker container rm $NAME-dev || true;
-                sudo docker rmi $DOCKER_HUB_USR/$NAME:dev || true; 
-                sudo docker run -d --name $NAME-dev -p 4999:5000 $DOCKER_HUB_USR/$NAME:dev;"
-                """
-        }
-    }
-    stage('deploy'){
-        when {
-                branch "main"
-        }
-        steps{
-            sh """SSHPASS=$SSH_PSW sshpass -e ssh -o StrictHostKeyChecking=no $SSH_USR@68.183.226.229 \
-                "sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin;
-                sudo mkdir -p /root/app;
-                sudo docker container stop $NAME-v$VERSIONS || true;
-                sudo docker container rm $NAME-v$VERSIONS || true;
-                sudo docker rmi $DOCKER_HUB_USR/$NAME:$VERSIONS || true; 
-                sudo docker run -d --name $NAME-v$VERSIONS -p $PORTS:5000 $DOCKER_HUB_USR/$NAME:$VERSIONS;"
-                """
-        }
-    }
+    // stage('deploy (dev)') {
+    //     when {
+    //         not {
+    //             branch "main"
+    //         }
+    //     }
+    //     steps{
+    //         sh """SSHPASS=$SSH_PSW sshpass -e ssh -o StrictHostKeyChecking=no $SSH_USR@68.183.226.229 \
+    //             "sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin;
+    //             sudo mkdir -p /root/app;
+    //             sudo docker container stop $NAME-dev || true;
+    //             sudo docker container rm $NAME-dev || true;
+    //             sudo docker rmi $DOCKER_HUB_USR/$NAME:dev || true; 
+    //             sudo docker run -d --name $NAME-dev -p 4999:5000 $DOCKER_HUB_USR/$NAME:dev;"
+    //             """
+    //     }
+    // }
+    // stage('deploy'){
+    //     when {
+    //             branch "main"
+    //     }
+    //     steps{
+    //         sh """SSHPASS=$SSH_PSW sshpass -e ssh -o StrictHostKeyChecking=no $SSH_USR@68.183.226.229 \
+    //             "sudo echo '$DOCKER_HUB_PSW' | docker login --username $DOCKER_HUB_USR --password-stdin;
+    //             sudo mkdir -p /root/app;
+    //             sudo docker container stop $NAME-v$VERSIONS || true;
+    //             sudo docker container rm $NAME-v$VERSIONS || true;
+    //             sudo docker rmi $DOCKER_HUB_USR/$NAME:$VERSIONS || true; 
+    //             sudo docker run -d --name $NAME-v$VERSIONS -p $PORTS:5000 $DOCKER_HUB_USR/$NAME:$VERSIONS;"
+    //             """
+    //     }
+    // }
 
   }
   post {

@@ -10,6 +10,8 @@ from matplotlib import pyplot as plt
 from pyzbar.pyzbar import decode
 import simplejson as json
 import base64
+import time
+import datetime
 from PIL import ImageFont, ImageDraw, Image
 
 reader = easyocr.Reader(['th','en']) # config easyocr able to read thai & eng 
@@ -20,20 +22,11 @@ def readBase64img(base64_string):
     return cv2.imdecode(np_data,cv2.IMREAD_UNCHANGED)
 
 obj = json.loads(input())
-
 img64 = obj['img64']
 data = obj['data']
-
 months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.']
-regex = {
-    "name" : "(นาย|นาง|นางสาว|น.ส.).*", # get all text after นาย|นาง|นางสาว|น.ส.
-    "date" : "([0-9]{1,2})([ ]+)?(%s)([ ]+)?([0-9]{2,4})" % ('|'.join(months)), # match string look like "01 ม.ค. 2565"
-    "time" : "([0-9]{1,2})([:][0-9][0-9])", # match string look like "09:30"
-    "reference" : "([0-9A-Za-z]){14,}", # match continuous string that have only ( a-z, A-Z, 0-9 ) more than 14
-    "money" : "([0-9]{1,3},([0-9]{3},)*[0-9]{3}|[0-9]+)([.][0-9][0-9])" # match string look money format with 2 decimal
-}
 
-def lcs(X, Y):
+def lcs(X, Y,t):
   m = len(X)
   n = len(Y)
   L = [[0 for x in range(n+1)] for x in range(m+1)]
@@ -61,21 +54,19 @@ def lcs(X, Y):
       index-=1
     elif L[i-1][j] > L[i][j-1]:
       i-=1 ; count += 1
-      text = '_' + text
+      text = t + text
     else:
       j-=1
   
   if len(X)-len(text) > 0:
     count += len(X)-len(text)
-    text = ''.join(['_']* (len(X)-len(text)) ) + text
+    text = ''.join([t]* (len(X)-len(text)) ) + text
   return text, ((len(text)-count)/len(text))
-
 
 class Text:
   def __init__(self, text, pos):
     self.text = text
     self.position = pos
-
 
 def OCR(img64):
   list_text = [] # initial variable for text extraction with image
@@ -98,16 +89,9 @@ def OCR(img64):
   lines = {} 
   desired_list = []
 
-  # ----------------- Find QRcode -----------------
   for contour in contours:
     (x, y, w, h) = cv2.boundingRect(contour)
     desired_list.append([x, y, w, h])
-    if( w/h < 1.3 and w/h > 0.7 ):
-      im = img[y:y+h, x:x+w] # crop image
-      QR = decode(im)
-      if( len(QR) > 0) :
-        data["reference"] = QR[0].data.decode().lower()
-  # -----------------------------------------------
 
   # ----------------- Bounding Line -----------------
   horizontal_list = [desired_list[0]]
@@ -145,20 +129,47 @@ def OCR(img64):
         if len(read_text) > 0 : text.append(read_text[0])
     text_line = ' '.join(text) # text in line format
     text_lines.append(text_line)
-    for keyword in regex:
-      tmp = re.search(regex[keyword], text_line)
-      if tmp != None : 
-        tmp_text = tmp.group(0)
-        if keyword == 'date':
+    for keyword in data:
+      search_text = text_line
+      
+
+      if keyword == 'reference' : 
+        search_text = text_line.replace(' ','')
+        tmp = re.search( "([0-9A-Za-z]){14,}",  search_text)
+        if tmp != None : result[keyword] = Text(tmp.group(0),position)
+      
+      elif keyword == 'money' : 
+        tmp = re.search( "([0-9]{1,3},([0-9]{3},)*[0-9]{3}|[0-9]+)([.][0-9][0-9])",  search_text)
+        if tmp != None : result[keyword] = Text(tmp.group(0),position)
+  
+      elif keyword == 'dst_acc' :
+        tmp = re.search( "([-x]){3,}",  search_text)
+        if tmp != None : 
+          tmp = re.search( "([0-9xX\\- ]){10,15}",  search_text)
+          if tmp != None : 
+            search_text = tmp.group(0).replace(' ','').replace('-','')
+            result[keyword] = Text(search_text,position)
+      
+      elif keyword == 'dst' : 
+        text,per = lcs(data[keyword],search_text,'_')
+        if per > 0.5 : result[keyword] = Text(search_text,position)
+
+      elif keyword == 'date' :
+        tmp = re.search("([0-9]{1,2})([ ]+)?(%s)([ ]+)?([0-9]{2,4})" % ('|'.join(months)),search_text)
+        if tmp != None : 
+          tmp_text = tmp.group(0)
           month = re.search('(%s)' % ('|'.join(months)),tmp_text).group(0)
           day,year =tmp_text.split(month)
-          if len(year) == 2: year = '25'+year
+          if len(year.strip()) == 2 : year = '25'+year.strip()
           tmp_text = '%s-%s-%s' % (int(year.strip())-543,'%02d' % (months.index(month.strip())+1),'%02d' % (int(day.strip())))
-        result[keyword] = Text(tmp_text,position)
+          result[keyword] = Text(tmp_text,position)
 
+
+  print(text_lines)
+  print(result)
   # ------------------------------ result-----------------------------------
   json_obj = {}
-  new_img = img.copy() 
+  new_img = img.copy()
   height, width,_ = new_img.shape
   blank_image = np.zeros((height,width+640,3), np.uint8)
   blank_image[0:new_img.shape[0], 0:new_img.shape[1]] = new_img
@@ -171,28 +182,31 @@ def OCR(img64):
   font_50 = ImageFont.truetype(font_path, 50)
   line = 50 ; i = 0 ; total_per = 0
   for x in result:
-    json_obj[x] = result[x].text
-    cv2.rectangle(new_img, (result[x].position[0], result[x].position[1]), (result[x].position[2], result[x].position[3]), (255,0,0), 2)
-    if data.get(x) is not None :
-      text,per = lcs(data[x],result[x].text)
-      draw.text(( width+50 , line ), x, font=font_30, fill='green') ; line += 30
-      draw.text(( width+50 , line ), "ข้อมูลจริง     : " + data[x], font=font_20, fill='green') ; line += 20
-      draw.text(( width+50 , line ), "ข้อมูลที่ได้    : " + result[x].text, font=font_20, fill='green') ; line += 20
-      draw.text(( width+50 , line ), "เปรียบเทียบ : " + text, font=font_20, fill='green') ; line += 20
-      draw.text(( width+50 , line ), "เปอร์เซ็นถูก  : " + str(round(per*100,2))+'%', font=font_20, fill='green') ; line += 30
-      i += 1 ; total_per += per*100
-  draw.text(( width+50 , line ), str(round(total_per/i, 2))+'%', font=font_50, fill='green') ;
-  blank_image = cv2.cvtColor(np.array(pil_im), cv2.COLOR_RGB2BGR)
-
-  for x in result:
-    json_obj[x] = result[x].text
-    cv2.rectangle(blank_image, (result[x].position[0], result[x].position[1]), (result[x].position[2], result[x].position[3]), (255,0,0), 2)
-  
-  retval, buffer = cv2.imencode('.jpg', blank_image)
-  json_obj['image'] = base64.b64encode(buffer)
-  json_obj['text_line'] = text_lines
-  json_obj['percent'] = round(total_per/i, 2)
-  if data.get('reference') is not None :  json_obj['reference'] = data['reference']
+    if x == 'reference':
+      if data.get(x) is None : data[x] = ' '
+      text,per = lcs(data[x],result[x].text,'_')
+      json_obj[x] =  { 'Read_reference':result[x].text ,'Expect_reference':data[x],"difference": text,"percent": per}
+    elif  x == 'date':
+      print(result[x].text)
+      yyyy,mm,dd = result[x].text.split('-')
+      Read_date = datetime.datetime(int(yyyy),int(mm),int(dd))
+      yyyy,mm,dd = data[x].split('-')
+      Expect_date  = datetime.datetime( int(yyyy),int(mm),int(dd))
+      difference = Expect_date - Read_date
+      json_obj[x] =  { 'Read_date':result[x].text ,'Expect_date':data[x],"difference": difference.days}
+    elif  x == 'money':
+      Read_money = float(result[x].text.replace(',',''))
+      Expect_money  = float(data[x].replace(',',''))
+      difference = Expect_money - Read_money
+      json_obj[x] =  { 'Read_money':result[x].text ,'Expect_money':data[x],"difference": difference}
+    elif  x == 'dst_acc':
+      text,per = lcs(data[x],result[x].text,'x')
+      text,per = lcs(result[x].text,text,'_')
+      json_obj[x] =  { 'Read_dst_acc':result[x].text ,'Expect_dst_acc':data[x],"difference": text,"percent": per}
+    elif  x == 'dst':
+      text,per = lcs(data[x],result[x].text,'_')
+      json_obj[x] =  { 'Read_dst':result[x].text ,'Expect_dst':data[x],"difference": text,"percent": per}
+  json_obj['text_lines'] = text_lines
   return json.dumps(json_obj)
   # ------------------------------ END -----------------------------------
 
