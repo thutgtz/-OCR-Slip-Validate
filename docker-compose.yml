@@ -3,7 +3,7 @@ version: '3'
 services:
   api:
     container_name: slip-validate
-    image: thutgtz/slip-validate:dev
+    image: thutgtz/slip-validate-new:dev
     build:
       context: .
       dockerfile: Dockerfile
