@@ -33,7 +33,7 @@ res = cv2.bitwise_and(img, dlt) # combine mask with image (select only white [0]
   # ------------------------------------------------------------------------
   
 gray = cv2.cvtColor(res, cv2.COLOR_BGR2GRAY) # convert Binary to RGB
-contours,hierarchy = cv2.findContours(gray.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE) # find contour (frame of close area)
+contours,hierarchy = cv2.findContours(gray.copy(), cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE) # find contour (frame of close area)
 
 lines = {} 
 json_obj = {}
